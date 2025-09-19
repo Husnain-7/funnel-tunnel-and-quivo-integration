@@ -23,7 +23,9 @@ The goal: automate order flow, fulfillment, and shipment updates.
 
 ---
 
-## ⚙️ Architecture
+## 📊 Architecture Diagram
+![Integration Architecture](Generated Image September 19, 2025 - 4_40PM.png)
+
 
 
 **Components:**
