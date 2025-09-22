@@ -5,9 +5,9 @@ error_reporting(E_ALL);
 
 // === DB Config ===
 $host   = "localhost";
-$user   = "apidoctorz_bclix";
-$pass   = "bclix@768";
-$dbname = "apidoctorz_funnel-tunnel";
+$user   = "u534957383_husnain7z";
+$pass   = "4876246@Hostinger";
+$dbname = "u534957383_funnel_tunnel";
 
 $mysqli = new mysqli($host, $user, $pass, $dbname);
 if ($mysqli->connect_error) {
@@ -19,7 +19,7 @@ $ship_payload = [
     "entity"=> "SHIPMENTS",
     "endpoint"=> [
         "type" => "WEBHOOK",
-        "url"  => "https://apidoctorz.com/funnel_tunnel/quivo_shipment_webhook.php"
+        "url"  => "https://bclix.tech/funnel_tunnel/quivo_shipment_webhook.php"
     ]
 ];
 
