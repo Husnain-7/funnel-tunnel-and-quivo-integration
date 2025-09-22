@@ -2,7 +2,7 @@
 $ch = curl_init();
 
 $payload = [
-  "target" => "https://apidoctorz.com/funnel_tunnel/webhook.php",
+  "target" => "https://bclix.tech/funnel_tunnel/webhook.php",
   "secret" => "4876246@funnel_tunnel",
   "events" => ["order_created", "order_updated"]
 ];
