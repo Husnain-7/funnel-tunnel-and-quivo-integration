@@ -23,6 +23,3 @@ try {
     // log error securely; do not echo in prod
     die('DB connection failed');
 }
-
-// Encryption key: load from env or secure store. 32 bytes for AES-256.
-define('ENCRYPTION_KEY', getenv('CREDENTIALS_KEY') ?: 'replace_with_32_byte_random_string_here');
