@@ -5,9 +5,9 @@ error_reporting(E_ALL);
 
 // === DB Config ===
 $host   = "localhost";
-$user   = "apidoctorz_bclix";
-$pass   = "bclix@768";
-$dbname = "apidoctorz_funnel-tunnel";
+$user   = "u534957383_husnain7z";
+$pass   = "4876246@Hostinger";
+$dbname = "u534957383_funnel_tunnel";
 
 // === Get Raw Payload ===
 $rawPayload = file_get_contents("php://input");
@@ -248,3 +248,47 @@ echo json_encode([
 ]);
 
 $mysqli->close();
+
+
+// === Send Order Data to Fusion Control ===
+function send_to_fusion_control($order_data) {
+    $webhook_url = 'https://app.fusion-control.com/webhook/funnel-tunnel';
+    
+    // Map Funnel Tunnel structure → Fusion Control format
+    $payload = [
+        'order_id' => $order_data['id'] ?? null,
+        'customer' => [
+            'name'    => $order_data['customerName'] ?? '',
+            'email'   => $order_data['customerEmail'] ?? '',
+            'country' => $order_data['shippingAddress']['country'] ?? '',
+            'vat_id'  => $order_data['vat_id'] ?? ''
+        ],
+        'line_items' => array_map(function($item) {
+            return [
+                'product_id'  => $item['productId'] ?? '',
+                'description' => $item['title'] ?? '',
+                'quantity'    => $item['quantity'] ?? 0,
+                'unit_price'  => $item['price'] ?? 0,
+                'vat_rate'    => determine_vat_rate($item['product_id']) ?? 0,
+            ];
+        }, $order_data['items'] ?? [])
+    ];
+
+    // HMAC signature
+    $signature = hash_hmac('sha256', json_encode($payload), "FUSION_WEBHOOK_SECRET");
+
+    $ch = curl_init($webhook_url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'X-Signature: ' . $signature
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    // Log Fusion response
+    file_put_contents("fusion_response.log", date("Y-m-d H:i:s")." | HTTP $httpCode | $response\n", FILE_APPEND);
+}
